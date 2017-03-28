@@ -1,0 +1,29 @@
+---
+
+- name: install kubernetes master
+  yum: name={{ item }} state=present
+  with_items:
+    - kubernetes-master
+
+- name: template /etc/kubernetes/apiserver
+  template: src=etc/kubernetes/apiserver.j2 dest=/etc/kubernetes/apiserver mode=644 backup=yes
+  notify: restart apiserver
+
+- name: template /etc/kubernetes/scheduler
+  template: src=etc/kubernetes/scheduler.j2 dest=/etc/kubernetes/scheduler mode=644 backup=yes
+  notify: restart scheduler
+
+- name: template /etc/kubernetes/controller-manager
+  template: src=etc/kubernetes/controller-manager.j2 dest=/etc/kubernetes/controller-manager mode=644 backup=yes
+  notify: restart controller-manager
+
+- name: template /etc/kubernetes/config
+  template: src=etc/kubernetes/config.j2 dest=/etc/kubernetes/config mode=644 backup=yes
+  notify: restart kubernetes master
+
+- name: start and enable kubernetes master releated services
+  service: name={{ item }} state=restarted
+  with_items:
+    - kube-apiserver
+    - kube-scheduler
+    - kube-controller-manager

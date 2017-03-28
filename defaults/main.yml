@@ -1,0 +1,11 @@
+---
+# defaults file for kubernetes master
+
+kube_master_etcd_prefix: /registry
+
+# kube_master_ip: 10.12.10.209
+kube_master_api_port: 8080
+kube_master_service_cluster_ip_range: 10.254.0.0/16
+kube_master_etcd_servers: http://10.12.10.209:2379,http://10.12.10.200:2379,http://10.12.10.210:2379
+
+

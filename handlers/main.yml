@@ -1,0 +1,19 @@
+---
+# handlers file for kubernetes master
+
+- name: restart apiserver
+  service: name=kube-apiserver state=restarted
+
+- name: restart scheduler
+  service: name=kube-controller-manager state=restarted
+
+- name: restart controller-manager
+  service: name=kube-scheduler state=restarted
+
+- name: restart kubernetes master
+  service: name={{ item }} state=restarted
+  with_items:
+    - kube-apiserver
+    - kube-scheduler
+    - kube-controller-manager
+
