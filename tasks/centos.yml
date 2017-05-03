@@ -5,6 +5,10 @@
   with_items:
     - kubernetes-master
 
+- name: include tls.yml
+  include: tls.yml
+  when: etcd_tls_enabled is defined and etcd_tls_enabled == 'true'
+
 - name: template /etc/kubernetes/apiserver
   template: src=etc/kubernetes/apiserver.j2 dest=/etc/kubernetes/apiserver mode=644 backup=yes
   notify: restart apiserver

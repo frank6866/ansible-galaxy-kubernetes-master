@@ -1,7 +1,9 @@
-mariadb galear
-=====================
+Kubernetes Master
+=================
 
-Install mariadb galera.
+This role is used to deploy kubernetes master. Supporting features as follows:
+
+* kubernetes configuration for connecting to etcd with TLS
 
 
 Inventory file demo
