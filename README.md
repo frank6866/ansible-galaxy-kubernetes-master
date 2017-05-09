@@ -1,8 +1,8 @@
-Kubernetes Master
-=================
+Kubernetes Master Standalone
+============================
+This role is used to deploy kubernetes master in standalone mode. Supporting features as follows:
 
-This role is used to deploy kubernetes master. Supporting features as follows:
-
+* deploying kubernetes master
 * kubernetes configuration for connecting to etcd with TLS
 
 
@@ -10,91 +10,54 @@ Inventory file demo
 -------------------
 
 ```
-mariadb-1 ansible_ssh_host=10.10.10.5 ansible_ssh_port=22 ansible_ssh_user=root ip=10.10.10.5 role="init_cluster_node"
-mariadb-2 ansible_ssh_host=10.10.10.6 ansible_ssh_port=22 ansible_ssh_user=root ip=10.10.10.6
-mariadb-3 ansible_ssh_host=10.10.10.7 ansible_ssh_port=22 ansible_ssh_user=root ip=10.10.10.7
+k8s-1 ansible_ssh_host=10.10.10.11 ansible_ssh_port=22 ansible_ssh_user=centos kube_master_ip=10.10.10.11
 
 
-[cluster1]
-mariadb-[1:3]
-
-[mariadb_galera:children]
-cluster1
-
-[mariadb_galera:vars]
-# add_ip_hostname_in_etc_hosts=true
+[kubernetes-master]
+k8s-1
 
 ```
-
-* the **ip** variable is used for **wsrep_node_address** item in /etc/my.cnf.d/galera.cnf
-* thie **add_ip_hostname_in_etc_hosts** variable is used to config hostname resolving if server is not registered in DNS Server. If your server is registered in DNS Server, you can comment this variable.
-
 
 Role Variables
 --------------
-No required variables.
 
-If you want to set the root password for the first time, you can set **mariadb_root_password** variable, this role does not support changing root password after the cluster is up, but you can change them by hands
-
-> mariadb_root_password: change_me
-
-You can change the listen port by setting **mariadb_listen_port** variable:
-
-> mariadb_listen_port: 3306
-
-You can change **mariadb_open_files_limit** and **mariadb_max_connections** by setting the following variable:
+The whole example of group_vas/kubernetes-master.yml file as follows:
 
 ```
-mariadb_open_files_limit: 2048
-mariadb_max_connections: 1024
-```
-
-Notice that **mariadb_open_files_limit** must great than **mariadb_max_connections**.
-
-If you want to create database by the script, you can set the **mariadb_databases** variable:
-
-```
-mariadb_databases:
-  - keystone
-  - glance
-  - cinder
-  - nova_api
-  - nova
-  - neutron
-```
-
-If you want to create user and set privilege, you can set **mariadb_users** variable like this:
-
-```
-mariadb_users:
-  - name: keystone
-    password: change_me
-    host: "%"
-    privilege: "keystone.*:ALL"
+ip_hostname_in_etc_hosts:
+  - ip: 10.12.10.11
+    hostname: k8s-1
     state: present
-  - name: keystone
-    password: change_me
-    host: "localhost"
-    privilege: "keystone.*:ALL"
+  - ip: 10.12.10.12
+    hostname: k8s-2
     state: present
+  - ip: 10.12.10.13
+    hostname: k8s-3
+    state: present
+
+kube_master_etcd_prefix: /k8s
+kube_master_service_cluster_ip_range: 10.254.0.0/16
+kube_master_etcd_servers: https://10.12.10.11:2379,http://10.12.10.12:2379,http://10.12.10.13:2379
+kube_etcd_tls_enabled: "true"
+kube_etcd_cert_file_path: etcd.crt
+kube_etcd_key_file_path: etcd.key
+kube_etcd_cacert_file_path: cacert.pem
+
 ```
+
+The Kubernetes cluster need to visit each other by hostname, if the hosts is not registered in DNS server, you can set **ip_hostname_in_etc_hosts** variable to add the id and hostname pair in /etc/hosts file.
 
 
 Example Playbook
 ----------------
 
 ```
-- hosts: mariadb_galera
+- hosts: kubernetes-master
   become: true
   roles:
-    - frank6866.mariadb-galera
+    - frank6866.linux_basic
+    - frank6866.kubernetes-master
 ```
-
-
-TODO
------
-1. change the openstack repo to mariadb offical repo
-2. install mariadb package by enanbling mariadb repo name
 
 
 License

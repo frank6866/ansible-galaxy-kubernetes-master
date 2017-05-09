@@ -24,7 +24,7 @@ KUBE_ADMISSION_CONTROL="--admission-control=NamespaceLifecycle,NamespaceExists,L
 
 
 # Add your own!
-{% if etcd_tls_enabled is not defined or etcd_tls_enabled == 'true' %}
+{% if kube_etcd_tls_enabled is not defined or kube_etcd_tls_enabled == 'true' %}
 KUBE_API_ARGS="--etcd-prefix={{ kube_master_etcd_prefix }} --etcd-cafile=/etc/pki/etcd/cacert.pem --etcd-certfile=/etc/pki/etcd/etcd.crt --etcd-keyfile=/etc/pki/etcd/private/etcd.key "
 {% else %}
 KUBE_API_ARGS="--etcd-prefix={{ kube_master_etcd_prefix }}"

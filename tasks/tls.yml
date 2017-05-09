@@ -4,10 +4,10 @@
   file: path=/etc/pki/etcd/private state=directory mode=755
 
 - name: copy etcd cert file
-  copy: src={{ etcd_cert_file_path }} dest=/etc/pki/etcd/etcd.crt
+  copy: src={{ kube_etcd_cert_file_path }} dest=/etc/pki/etcd/etcd.crt
 
 - name: copy etcd key file
-  copy: src={{ etcd_key_file_path }} dest=/etc/pki/etcd/private/etcd.key
+  copy: src={{ kube_etcd_key_file_path }} dest=/etc/pki/etcd/private/etcd.key
 
 - name: copy etcd cacert file
-  copy: src={{ etcd_cacert_file_path }} dest=/etc/pki/etcd/cacert.pem
+  copy: src={{ kube_etcd_cacert_file_path }} dest=/etc/pki/etcd/cacert.pem
