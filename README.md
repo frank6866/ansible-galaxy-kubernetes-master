@@ -25,19 +25,19 @@ The whole example of group_vas/kubernetes-master.yml file as follows:
 
 ```
 ip_hostname_in_etc_hosts:
-  - ip: 10.12.10.11
+  - ip: 10.10.10.11
     hostname: k8s-1
     state: present
-  - ip: 10.12.10.12
+  - ip: 10.10.10.12
     hostname: k8s-2
     state: present
-  - ip: 10.12.10.13
+  - ip: 10.10.10.13
     hostname: k8s-3
     state: present
 
 kube_master_etcd_prefix: /k8s
 kube_master_service_cluster_ip_range: 10.254.0.0/16
-kube_master_etcd_servers: https://10.12.10.11:2379,http://10.12.10.12:2379,http://10.12.10.13:2379
+kube_master_etcd_servers: https://10.10.10.11:2379,http://10.10.10.12:2379,http://10.10.10.13:2379
 kube_etcd_tls_enabled: "true"
 kube_etcd_cert_file_path: etcd.crt
 kube_etcd_key_file_path: etcd.key
